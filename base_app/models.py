@@ -11,3 +11,9 @@ class Location(models.Model):
 
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.location
+
+
+class Tweets(models.Model):
+    location = models.ForeignKey(Location)
+    tweet_text = models.CharField(max_length=140)
+    number = models.IntegerField(default=0)
