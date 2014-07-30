@@ -19,12 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '^f6)g@c3g8y)z89)p*dydqv2ifnoo0@l%)yeuaulb3=+#@=s9r'
 
-# Twitter API key constants
-CONSUMER_KEY = '0c99AONeJmB57SeQEgzWScZMg'
-CONSUMER_SECRET ='TFPzeNc5zXQyCXmWGyO0uAgyquBYo48UDdBNiBqEbfoOayDdZD'
-OAUTH_TOKEN = '1580239388-OHIozETc2iWeVt9zwYAXmDE5xJpbhA8CozErc1m'
-OAUTH_TOKEN_SECRET = 'opIQ0yfQncpjOaQRM5J6JvuDnSdsFFY1hH4R6nDD0PlNZ'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
