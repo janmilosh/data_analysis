@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import twitter
 import json
+import requests
 
 def index(request):
-    return HttpResponse(get_tweets())
+    return HttpResponse(get_github())
 
 def get_tweets():
 
@@ -30,3 +31,8 @@ def get_tweets():
     us_trends = [trend['name'] for trend in us_trends[0]['trends']]
 
     return us_trends
+
+def get_github():
+
+    r = requests.get('http://janmilosh.com/feed/')
+    return r
