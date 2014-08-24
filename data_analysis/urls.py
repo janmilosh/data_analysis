@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from stocks.views import HelloTemplate
 
 urlpatterns = patterns('',
     # Examples:
@@ -7,5 +8,6 @@ urlpatterns = patterns('',
 
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^hello/$', 'stocks.views.hello'),
-    url(r'^hello_template/$', 'stocks.views.hello_template'),
+    url(r'^hello_template_simple/$', 'stocks.views.hello_template_simple'),
+    url(r'^hello_class_view/$', HelloTemplate.as_view()),
 )
