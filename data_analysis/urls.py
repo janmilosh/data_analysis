@@ -7,4 +7,5 @@ urlpatterns = patterns('',
 
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^hello/$', 'stocks.views.hello'),
+    url(r'^hello_template/$', 'stocks.views.hello_template'),
 )
