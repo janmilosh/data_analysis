@@ -1,7 +1,17 @@
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  {% for article in articles %}
+    <div>
+      <h2><a href="/articles/{{ article.id }}/">{{ article.title }}</a></h2>
+      <p>{{ article.body }}</p>
+    </div>
+  {% endfor %}
+</body>
+</html>
 
-{% for article in articles %}
-  <div>
-    <h2><a href="/articles/{{ article.id }}/">{{ article.title }}</a></h2>
-    <p>{{ article.body }}</p>
-  </div>
-{% endfor %}
+
+
+

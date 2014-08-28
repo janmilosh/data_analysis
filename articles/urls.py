@@ -1,6 +1,6 @@
 from django.conf.urls import include, patterns, url
 
-urlpatterns = patterns('',
-
-    url(r'^$', 'articles.views.articles', name='articles'),
+urlpatterns = patterns('articles.views',
+    url(r'^$', 'articles'),
+    url(r'^(?P<article_id>\d+)/$', 'article'),
 )
