@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if articles.count > 0 %}
+
+    {% for article in articles %}
+      <div>
+        <h2><a href="/articles/{{ article.id }}/">{{ article.title }}</a></h2>
+        <p>{{ article.body }}</p>
+      </div>
+    {% endfor %}
+
+  {% else %}
+
+    <p>There are no articles.</p>
+
+  {% endif %}
+
+{% endblock %}
+

@@ -3,7 +3,7 @@ import datetime
 from django.utils import timezone
 
 
-class Stocks(models.Model):
+class Stock(models.Model):
     company = models.CharField(max_length=6)
     timestamp = models.DateTimeField('timestamp')
 
