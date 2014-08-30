@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if stocks.count > 0 %}
+
+    {% for stock in stocks %}
+      <div>
+        <h2><a href="/stocks/{{ stock.id }}/">{{ stock.symbol }}</a></h2>
+        <p>{{ stock.company }}</p>
+      </div>
+    {% endfor %}
+
+  {% else %}
+
+    <p>There are no stocks.</p>
+
+  {% endif %}
+
+{% endblock %}

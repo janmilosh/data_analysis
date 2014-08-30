@@ -29,7 +29,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, 'templates'),
     os.path.join(SITE_ROOT, 'templates', 'articles'),
-    os.path.join(SITE_ROOT, 'templates', 'templates'),
+    os.path.join(SITE_ROOT, 'templates', 'stocks'),
 )
 
 # Quick-start development settings - unsuitable for production

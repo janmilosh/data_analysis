@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ stock.symbol }}{% endblock %}
+
+{% block content %}
+
+  <h2>{{ stock.symbol }}</h2>
+  <p>{{ stock.company }}</p>
+
+{% endblock %}
