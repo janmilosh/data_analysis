@@ -18,6 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 MEDIA_ROOT = os.path.join(SITE_ROOT, 'media')
 
+STATIC_ROOT = os.path.join(SITE_ROOT, 'staticfiles')
+# URL to use when referring to static files located in STATIC_ROOT.
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(SITE_ROOT, "static"),
