@@ -6,7 +6,7 @@
 
     {% for stock in stocks %}
       <div>
-        <h2><a href="/stocks/{{ stock.id }}/">{{ stock.symbol }}</a></h2>
+        <h2><a href="/stocks/{{ stock.id }}/">{{ stock.ticker }}</a></h2>
         <p>{{ stock.company }}</p>
       </div>
     {% endfor %}

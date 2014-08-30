@@ -10,7 +10,7 @@ def stocks(request):
     }))
 
 def stock(request, stock_id=1):
-    stock = get_object_or_404(stock, id=stock_id)
+    stock = get_object_or_404(Stock, id=stock_id)
 
     return render(request, 'stock.html', ({
         'stock': stock
