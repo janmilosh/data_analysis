@@ -35,3 +35,9 @@ text.label {
   font-family: helvetica;
   fill: white;
 }
+
+.line {
+  fill: none;
+  stroke: orange;
+  stroke-width: 1.5px;
+}

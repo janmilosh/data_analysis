@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 
 {% block title %}{{ stock.ticker }}{% endblock %}
@@ -7,9 +8,7 @@
 
   <h2>{{ stock.ticker }}</h2>
   <h3>{{ stock.company }}</h3>
-  <p>{{ stock_data }}</p>
 
-  
   <div id="graph"></div>
   
   <script>
@@ -19,106 +18,85 @@
     var width = 750 - margin.left - margin.right;
     var svgColor = '#222';
 
-    var maxX = d3.max(dataArray, function(d) { return d.x; });
-    var minX = d3.min(dataArray, function(d) { return d.x; });
-    var maxY = d3.max(dataArray, function(d) { return d.y; });
-    var minY = d3.min(dataArray, function(d) { return d.y; });
-
-    var parseDate = d3.time.format("%x").parse;
-
-    // d3.json("{{stock_data}}", function(error, data) {
-    //   data.forEach(function(d) {
-    //   d.date = parseDate(d.date);
-    //   d.close = +d.close;
-    // });
-
-    var xScale = d3.scale.linear()
-      .domain([minX - 1, maxX + 1])
-      .range([0, width]);
-
-    var yScale = d3.scale.linear()
-      .domain([minY - 1, maxY + 1])
-      .range([height, 0]);
-
-    var svgSelection = d3.select('#graph')
-      .append('svg')
-      .style('background', svgColor)
-      .attr('height', height + margin.top + margin.bottom)
-      .attr('width', width + margin.left + margin.right)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-      
-    var dataPoints = svgSelection
-      .selectAll('circle')
-      .data(dataArray)
-      .enter()
-      .append('circle');
-
-    var dataAttributes = dataPoints
-      .attr('cx', function (d) { return xScale(d.x); })
-      .attr('cy', function(d) { return yScale(d.y); })
-      .attr('r', 10)
-      .attr('fill', function(d) { return d.color });
-
-    var text = svgSelection
-      .selectAll('text')
-      .data(dataArray)
-      .enter()
-      .append('text');
-
-    var dataLabels = text
-      .attr('x', function(d) { return xScale(d.x) + 10; })
-      .attr('y', function(d) { return yScale(d.y) - 10; })
-      .text( function (d) { return d.x + ', ' + d.y; })
-      .attr('font-family', 'helvetica')
-      .attr('font-size', '16px')
-      .attr('fill', function(d) { return d.color });
-
-    var xAxis = d3.svg.axis()
-      .scale(xScale)
-      .orient('bottom')
-      .ticks(8);
-
-    var yAxis = d3.svg.axis()
-      .scale(yScale)
-      .orient('left')
-      .ticks(5);
+    d3.csv("{% static 'data/table.csv' %}", function(error, data) {
+      console.log('the data', data);
+      data.forEach(function(d) {
+        d.close = +d.Close;
+        d.date = new Date(d.Date); 
+      });
+      console.log('the data', data);
     
-    svgSelection.append('g')
-      .attr('class', 'axis')
-      .attr('transform', 'translate(0, ' + height + ')')
-      .call(xAxis);
 
-    svgSelection.append('g')
-      .attr('class', 'axis')
-      .call(yAxis);
+    });
+    
+       
 
-    svgSelection.append('text') // Add title, simply append and define text 
-      .attr('class', 'title')   // attributes and position
-      .attr('x', (width/2))
-      .attr('y', 0 - (margin.top/2))
-      .attr('text-anchor', 'middle')
-      .style('font-size', '20px') 
-      .text('The Graph Title');
+    // var xScale = d3.scale.linear()
+    //   .domain(d3.extent(function(d) { return d.date; }))
+    //   .range([0, width]);
 
-    svgSelection.append('text') // Add x-axis label, similar to title
-      .attr('class', 'label')
-      .attr('x', (width/2))
-      .attr('y', height + margin.bottom/2)
-      .attr('dy', '16')
-      .attr('text-anchor', 'middle')  
-      .style('font-size', '16px') 
-      .text('x-axis data');
+    // var yScale = d3.scale.linear()
+    //   .domain(d3.extent(function(d) { return d.close; }))
+    //   .range([height, 0]);
 
-    svgSelection.append('text') // Add y-axis label, similar to above, but with transform
-      .attr('class', 'label')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - margin.left/2)
-      .attr('x', 0 - height/2)
-      .attr('dy', '-8')
-      .attr('text-anchor', 'middle')  
-      .style('font-size', '16px') 
-      .text('y-axis data');
+    // var svgSelection = d3.select('#graph')
+    //   .append('svg')
+    //   .style('background', svgColor)
+    //   .attr('height', height + margin.top + margin.bottom)
+    //   .attr('width', width + margin.left + margin.right)
+    //   .append('g')
+    //   .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+      
+    // svgSelection.append('path')
+    //   .datum(data)
+    //   .attr('class', 'line')
+    //   .attr('d', line);
+    
+    // var xAxis = d3.svg.axis()
+    //   .scale(xScale)
+    //   .orient('bottom')
+    //   .ticks(8);
+
+    // var yAxis = d3.svg.axis()
+    //   .scale(yScale)
+    //   .orient('left')
+    //   .ticks(5);
+    
+    // svgSelection.append('g')
+    //   .attr('class', 'axis')
+    //   .attr('transform', 'translate(0, ' + height + ')')
+    //   .call(xAxis);
+
+    // svgSelection.append('g')
+    //   .attr('class', 'axis')
+    //   .call(yAxis);
+
+    // svgSelection.append('text') // Add title, simply append and define text 
+    //   .attr('class', 'title')   // attributes and position
+    //   .attr('x', (width/2))
+    //   .attr('y', 0 - (margin.top/2))
+    //   .attr('text-anchor', 'middle')
+    //   .style('font-size', '20px') 
+    //   .text('The Graph Title');
+
+    // svgSelection.append('text') // Add x-axis label, similar to title
+    //   .attr('class', 'label')
+    //   .attr('x', (width/2))
+    //   .attr('y', height + margin.bottom/2)
+    //   .attr('dy', '16')
+    //   .attr('text-anchor', 'middle')  
+    //   .style('font-size', '16px') 
+    //   .text('x-axis data');
+
+    // svgSelection.append('text') // Add y-axis label, similar to above, but with transform
+    //   .attr('class', 'label')
+    //   .attr('transform', 'rotate(-90)')
+    //   .attr('y', 0 - margin.left/2)
+    //   .attr('x', 0 - height/2)
+    //   .attr('dy', '-8')
+    //   .attr('text-anchor', 'middle')  
+    //   .style('font-size', '16px') 
+    //   .text('y-axis data');
   </script>
 
 
