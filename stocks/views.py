@@ -22,6 +22,8 @@ def stock(request, stock_id=1):
 
     data = get_stock_data()
 
+    
+
     return render(request, 'stock.html', ({
         'stock': stock,
         'stock_data': data,
