@@ -2,8 +2,16 @@ body {
   text-align: center;
 }
 
+h1, h2, h3 {
+  margin: 0 0 20px;
+}
+
+#graph2 {
+  margin-top: 50px;
+}
+
 #page {
-  width: 960px;
+  width: 100%;
   text-align: left;
   margin: 10px auto 20px auto;
   background-color: #0c0c0c;
@@ -12,14 +20,12 @@ body {
 #sidebar {
   float: left;
   width: 200px;
-  border: 1px solid #000;
+  background: #eee;
 }
 
 #content {
   float: left;
-  width: 600px;
-  border: 1px solid #f00;
-  padding: 10px;
+  padding: 0 20px;
 }
 
 .axis path, .axis line {
@@ -38,6 +44,6 @@ text.label {
 
 .line {
   fill: none;
-  stroke: orange;
+  stroke: #ABFF00;
   stroke-width: 1.5px;
 }

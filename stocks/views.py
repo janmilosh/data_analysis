@@ -16,9 +16,12 @@ def stocks(request):
 
 def stock(request, stock_id=1):
     stock = get_object_or_404(Stock, id=stock_id)
-    print stock.ticker
 
     data = get_stock_data(stock.ticker)
+
+    city = 'Columbus,%20Ohio'
+    weather_data = get_weather_data(city)
+    print weather_data
 
     return render(request, 'stock.html', ({
         'stock': stock,
@@ -31,3 +34,10 @@ def get_stock_data(stock):
     print request_string
     data = requests.get(request_string)
     return data.content
+
+def get_weather_data(city):
+    api_key = 'e7abc77487d7e3eb'
+    request_string = 'http://api.wunderground.com/api/' + api_key + '/hourly/q/' + city + '.json'
+    data = requests.get(request_string)
+    return data.content
+
