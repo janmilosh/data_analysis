@@ -111,89 +111,88 @@
     var width = 750 - margin.left - margin.right;
     var svgColor = '#222';
 
-    var parseDate = d3.time.format('%Y-%m-%d').parse;
-    var dateFormat = d3.time.format('%Y');
+    var dateFormat = d3.time.format('%d');
+    var dataArray = [];
+
+    {% for temp in hourly_temps %}
+      dataArray.push({ time: new Date({{temp.time}}), temp: {{ temp.temp }} });
+    {% endfor %}
+
+    console.log(dataArray);
+  
+    var xRange = d3.extent(dataArray, function(d) { return d.time; });
+    var yMax = d3.max(dataArray, function(d) { return d.temp })
+    console.log(xRange);
+    var xScale = d3.time.scale()
+      .domain(xRange).nice()
+      .range([0, width]);
+    var yScale = d3.scale.linear()
+      .domain([0, yMax]).nice() 
+      .range([height, 0]);
+  
+    var svgSelection = d3.select('#graph2')
+      .append('svg')
+      .style('background', svgColor)
+      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', width + margin.left + margin.right)
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    var line = d3.svg.line()
+      .x(function(d) { return xScale(d.date); })
+      .y(function(d) { return yScale(d.time); });
+      
+    svgSelection.append('path')
+      .datum(dataArray)
+      .attr('class', 'line')
+      .attr('d', line);
     
-    d3.csv("{% static 'data/table.csv' %}", function(d) {
-      return {
-        date: parseDate(d.Date),
-        close: +d.Close
-      };
-    }, function(error, data) {
-      var xRange = d3.extent(data, function(d) { return d.date; });
-      var yMax = d3.max(data, function(d) { return d.close })
-      
-      var xScale = d3.time.scale()
-        .domain(xRange).nice()
-        .range([0, width]);
-      var yScale = d3.scale.linear()
-        .domain([0, yMax]).nice() 
-        .range([height, 0]);
+    var xAxis = d3.svg.axis()
+      .scale(xScale)
+      .orient('bottom')
+      // .ticks(d3.time.hours(xRange[0], xRange[1]).length)
+      // .tickFormat(dateFormat);
+
+    var yAxis = d3.svg.axis()
+      .scale(yScale)
+      .orient('left')
+      .ticks(8);
     
-      var svgSelection = d3.select('#graph2')
-        .append('svg')
-        .style('background', svgColor)
-        .attr('height', height + margin.top + margin.bottom)
-        .attr('width', width + margin.left + margin.right)
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+    svgSelection.append('g')
+      .attr('class', 'axis')
+      .attr('transform', 'translate(0, ' + height + ')')
+      .call(xAxis);
 
-      var line = d3.svg.line()
-        .x(function(d) { return xScale(d.date); })
-        .y(function(d) { return yScale(d.close); });
-        
-      svgSelection.append('path')
-        .datum(data)
-        .attr('class', 'line')
-        .attr('d', line);
-      
-      var xAxis = d3.svg.axis()
-        .scale(xScale)
-        .orient('bottom')
-        .ticks(d3.time.years(xRange[0], xRange[1]).length)
-        .tickFormat(dateFormat);
+    svgSelection.append('g')
+      .attr('class', 'axis')
+      .call(yAxis);
 
-      var yAxis = d3.svg.axis()
-        .scale(yScale)
-        .orient('left')
-        .ticks(8);
-      
-      svgSelection.append('g')
-        .attr('class', 'axis')
-        .attr('transform', 'translate(0, ' + height + ')')
-        .call(xAxis);
+    svgSelection.append('text') // Add title, simply append and define text 
+      .attr('class', 'title')   // attributes and position
+      .attr('x', (width/2))
+      .attr('y', 0 - (margin.top/2))
+      .attr('text-anchor', 'middle')
+      .style('font-size', '20px') 
+      .text('{{ start_date }}');
 
-      svgSelection.append('g')
-        .attr('class', 'axis')
-        .call(yAxis);
+    svgSelection.append('text') // Add x-axis label, similar to title
+      .attr('class', 'label')
+      .attr('x', (width/2))
+      .attr('y', height + margin.bottom/2)
+      .attr('dy', '16')
+      .attr('text-anchor', 'middle')  
+      .style('font-size', '16px') 
+      .text('Hours');
 
-      svgSelection.append('text') // Add title, simply append and define text 
-        .attr('class', 'title')   // attributes and position
-        .attr('x', (width/2))
-        .attr('y', 0 - (margin.top/2))
-        .attr('text-anchor', 'middle')
-        .style('font-size', '20px') 
-        .text('The Graph Title');
-
-      svgSelection.append('text') // Add x-axis label, similar to title
-        .attr('class', 'label')
-        .attr('x', (width/2))
-        .attr('y', height + margin.bottom/2)
-        .attr('dy', '16')
-        .attr('text-anchor', 'middle')  
-        .style('font-size', '16px') 
-        .text('Years');
-
-      svgSelection.append('text') // Add y-axis label, similar to above, but with transform
-        .attr('class', 'label')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - margin.left/2)
-        .attr('x', 0 - height/2)
-        .attr('dy', '-20')
-        .attr('text-anchor', 'middle')  
-        .style('font-size', '16px') 
-        .text('Closing Price ($)');
-      }); 
+    svgSelection.append('text') // Add y-axis label, similar to above, but with transform
+      .attr('class', 'label')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - margin.left/2)
+      .attr('x', 0 - height/2)
+      .attr('dy', '-20')
+      .attr('text-anchor', 'middle')  
+      .style('font-size', '16px') 
+      .text('Temperature (deg. Fahrenheit)'); 
   </script>
 
 
