@@ -10,6 +10,7 @@
   <h3>{{ stock.company }}</h3>
 
   <div id="graph"></div>
+  <div id="graph2"></div>
   
   <script>
 
@@ -30,6 +31,8 @@
       var xRange = d3.extent(data, function(d) { return d.date; });
       var yMax = d3.max(data, function(d) { return d.close })
       
+      console.log(data);
+
       var xScale = d3.time.scale()
         .domain(xRange).nice()
         .range([0, width]);
@@ -101,48 +104,46 @@
         .style('font-size', '16px') 
         .text('Closing Price ($)');
       }); 
-  </script>
+  
+    // Start of weather plot
 
-  <div id="graph2"></div>
-  <script>
+    var margin2 = {top: 75, right: 75, bottom: 75, left: 100};
+    var height2 = 500 - margin2.top - margin2.bottom;
+    var width2 = 750 - margin2.left - margin2.right;
+    var svgColor2 = '#f8f8f8';
 
-    var margin = {top: 75, right: 75, bottom: 75, left: 100};
-    var height = 500 - margin.top - margin.bottom;
-    var width = 750 - margin.left - margin.right;
-    var svgColor = '#222';
-
-    var dateFormat = d3.time.format('%d');
+    var parseDate2 = d3.time.format('%H %d %m %Y').parse;
+    var dateFormat2 = d3.time.format('%I %p');
     var dataArray = [];
 
     {% for temp in hourly_temps %}
-      dataArray.push({ time: new Date({{temp.time}}), temp: {{ temp.temp }} });
+      dataArray.push({ time: parseDate2('{{temp.time}}'), temp: {{ temp.temp }} });
     {% endfor %}
-
-    console.log(dataArray);
   
     var xRange = d3.extent(dataArray, function(d) { return d.time; });
     var yMax = d3.max(dataArray, function(d) { return d.temp })
     console.log(xRange);
     var xScale = d3.time.scale()
       .domain(xRange).nice()
-      .range([0, width]);
+      .range([0, width2]);
     var yScale = d3.scale.linear()
       .domain([0, yMax]).nice() 
-      .range([height, 0]);
+      .range([height2, 0]);
   
-    var svgSelection = d3.select('#graph2')
+    var svgSelection2 = d3.select('#graph2')
       .append('svg')
-      .style('background', svgColor)
-      .attr('height', height + margin.top + margin.bottom)
-      .attr('width', width + margin.left + margin.right)
+      .style('background', svgColor2)
+      .attr('height', height2 + margin2.top + margin2.bottom)
+      .attr('width', width2 + margin2.left + margin2.right)
       .append('g')
-      .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+      .attr('transform', 'translate(' + margin2.left + ', ' + margin2.top + ')');
 
     var line = d3.svg.line()
-      .x(function(d) { return xScale(d.date); })
-      .y(function(d) { return yScale(d.time); });
+      .interpolate('basis')
+      .x(function(d) { return xScale(d.time); })
+      .y(function(d) { return yScale(d.temp); });
       
-    svgSelection.append('path')
+    svgSelection2.append('path')
       .datum(dataArray)
       .attr('class', 'line')
       .attr('d', line);
@@ -150,50 +151,50 @@
     var xAxis = d3.svg.axis()
       .scale(xScale)
       .orient('bottom')
-      // .ticks(d3.time.hours(xRange[0], xRange[1]).length)
-      // .tickFormat(dateFormat);
+      .ticks(d3.time.hours(xRange[0], xRange[1]).length)
+      .tickFormat(dateFormat2)
+      .ticks(8);
 
     var yAxis = d3.svg.axis()
       .scale(yScale)
       .orient('left')
       .ticks(8);
     
-    svgSelection.append('g')
+    svgSelection2.append('g')
       .attr('class', 'axis')
-      .attr('transform', 'translate(0, ' + height + ')')
+      .attr('transform', 'translate(0, ' + height2 + ')')
       .call(xAxis);
 
-    svgSelection.append('g')
+    svgSelection2.append('g')
       .attr('class', 'axis')
       .call(yAxis);
 
-    svgSelection.append('text') // Add title, simply append and define text 
+    svgSelection2.append('text') // Add title, simply append and define text 
       .attr('class', 'title')   // attributes and position
-      .attr('x', (width/2))
-      .attr('y', 0 - (margin.top/2))
+      .attr('x', (width2/2))
+      .attr('y', 0 - (margin2.top/2))
       .attr('text-anchor', 'middle')
       .style('font-size', '20px') 
-      .text('{{ start_date }}');
+      .text('{{ city }}, {{ state }} hourly high');
 
-    svgSelection.append('text') // Add x-axis label, similar to title
+    svgSelection2.append('text') // Add x-axis label, similar to title
       .attr('class', 'label')
-      .attr('x', (width/2))
-      .attr('y', height + margin.bottom/2)
+      .attr('x', (width2/2))
+      .attr('y', height2 + margin2.bottom/2)
       .attr('dy', '16')
       .attr('text-anchor', 'middle')  
       .style('font-size', '16px') 
-      .text('Hours');
+      .text('{{ start_date }} - {{ end_date }}');
 
-    svgSelection.append('text') // Add y-axis label, similar to above, but with transform
+    svgSelection2.append('text') // Add y-axis label, similar to above, but with transform
       .attr('class', 'label')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - margin.left/2)
-      .attr('x', 0 - height/2)
+      .attr('y', 0 - margin2.left/2)
+      .attr('x', 0 - height2/2)
       .attr('dy', '-20')
       .attr('text-anchor', 'middle')  
       .style('font-size', '16px') 
-      .text('Temperature (deg. Fahrenheit)'); 
+      .html('Temp. &deg;F'); 
   </script>
-
 
 {% endblock %}

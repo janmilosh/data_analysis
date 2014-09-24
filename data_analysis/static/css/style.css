@@ -28,22 +28,31 @@ h1, h2, h3 {
   padding: 0 20px;
 }
 
+svg {
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  margin-bottom: 30px;
+}
+
 .axis path, .axis line {
   fill: none;
-  stroke: white;
+  stroke: #5A78BB;
   stroke-width: 1px;
   shape-rendering: crispEdges;
 }
 
-.tick text,
 text.title,
 text.label {
   font-family: helvetica;
-  fill: white;
+  fill: #254DA7;
+}
+
+.tick text {
+  font-family: helvetica;
+  fill: #5A78BB;
 }
 
 .line {
   fill: none;
-  stroke: #ABFF00;
+  stroke: #38CC4B;
   stroke-width: 1.5px;
 }

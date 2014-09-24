@@ -19,29 +19,46 @@ def stock(request, stock_id=1):
     data = get_stock_data(stock.ticker)
 
     #Test weather data
-    city = 'Columbus,%20Ohio'
-    weather_data = get_weather_data(city)
+    city = 'Columbus'
+    state = 'Ohio'
+    location = city + ',%20' + state
+    weather_data = get_weather_data(location)
     weather_data = json.loads(weather_data)
-
-    hourly_temps = []
 
     weather_data = weather_data['hourly_forecast']
     
     start_date_base = weather_data[0]['FCTTIME']
-    month = start_date_base['month_name']
-    day = start_date_base['mday']
-    year = start_date_base['year']
-    start_date = '%s %s, %s' % (month, day, year)
+    start_month = start_date_base['month_name_abbrev']
+    start_day = start_date_base['mday']
+    start_year = start_date_base['year']
+    start_date = '%s %s, %s' % (start_month, start_day, start_year)
+    
+    last_index = len(weather_data) - 1
+    end_date_base = weather_data[last_index]['FCTTIME']
+    end_month = end_date_base['month_name_abbrev']
+    end_day = end_date_base['mday']
+    end_year = end_date_base['year']
+    end_date = '%s %s, %s' % (end_month, end_day, end_year)
+
+    hourly_temps = []
 
     for data in weather_data:
+        time = data['FCTTIME']
+        hour = time['hour_padded']
+        day = time['mday_padded']
+        month = time['mon_padded']
+        year = time['year']
         hourly_temps.append({
             'temp': data['temp']['english'],
-            'time': data['FCTTIME']['epoch'],
+            'time': '%s %s %s %s' % (hour, day, month, year),
         })
 
     return render(request, 'stock.html', ({
+        'city': city,
+        'state': state,
         'hourly_temps': hourly_temps,
         'start_date': start_date,
+        'end_date': end_date,
         'stock': stock,
         'stock_data': data,
     }))
